@@ -26,6 +26,11 @@ public class WebsocketsApplication {
         return new GreetingThread();
     }
     
+    /**
+     * Start the redis background thread within the Spring context.  
+     * @param taskExecutor
+     * @return
+     */
     @Bean
     public CommandLineRunner schedulingRunner(TaskExecutor taskExecutor) {
         return new CommandLineRunner() {

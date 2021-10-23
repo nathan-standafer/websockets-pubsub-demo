@@ -9,6 +9,9 @@ import com.nas.websockets.WebSocketConfig;
 import com.nas.websockets.entity.Greeting;
 import com.nas.websockets.entity.HelloMessage;
 
+/**
+ * allows web clients to send messages to be posted to a web sockets channel for other clients to receive.
+ */
 @Controller
 public class GreetingController {
 

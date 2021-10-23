@@ -7,11 +7,11 @@ import com.nas.websockets.WebSocketConfig;
 import com.nas.websockets.entity.Greeting;
 
 @Component
-public class GreetingSender {
+public class GreetingMessagingSender {
     
     private final SimpMessagingTemplate simpMessagingTemplate;
 
-    public GreetingSender(SimpMessagingTemplate SimpMessagingTemplate) {
+    public GreetingMessagingSender(SimpMessagingTemplate SimpMessagingTemplate) {
         this.simpMessagingTemplate = SimpMessagingTemplate;
     }
     

@@ -1,56 +1,57 @@
 package com.nas.websockets.thread;
 
-import java.util.Date;
-
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.nas.websockets.redis.RedisPubSubBean;
-import com.nas.websockets.redis.RedisSubcriber;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
 
-public class GreetingThread implements Runnable{
-
-    @Autowired
-    private GreetingSender greetingSender;
+public class GreetingThread implements Runnable {
     
     @Autowired
     private RedisPubSubBean redisPubSubBean;
     
-    private final JedisPoolConfig poolConfig = new JedisPoolConfig();
-    private final JedisPool jedisPool = new JedisPool(poolConfig, "127.0.0.1", 6379, 0);
-    private final Jedis subscriberJedis = jedisPool.getResource();
-    //private final RedisPubSub redisPubSub = new RedisPubSub();
+    public final static String CHANNEL_NAME = "greeting_channel";
+    
 
+
+    /**
+     * Connect to a redis server and subscribe to a channel. 
+     */
     @Override
     public void run() {
+        
         while(true) {
+            JedisPool jedisPool = null;
             try {
-                Thread.sleep(5000);
+                JedisPoolConfig poolConfig = new JedisPoolConfig();
+                jedisPool = new JedisPool(poolConfig, "127.0.0.1", 6379, 0);
+                Jedis subscriberJedis = jedisPool.getResource();
+                
+                System.out.println("Subscribing to \"" + CHANNEL_NAME + "\". This thread will be blocked.");
+                subscriberJedis.subscribe(redisPubSubBean, CHANNEL_NAME);  //this will block forever.  I assume until an error of some kind occurs.
+                
+                redisPubSubBean.unsubscribe();
+                System.out.println("Subscription to \"\" + CHANNEL_NAME + \"\" ended.");
+                
+                jedisPool.returnResource(subscriberJedis);
+                jedisPool.close();
+                System.out.println("subscription resource complete.");
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            catch (Exception e)
-            {}
-            publishGreeting();
-            subscribe();
+            finally {
+                try {
+                    Thread.sleep(10000);  //sleep a little before attempting to re-connect }
+                    jedisPool.close();
+                } catch (Exception e) {}
+            }
         }
     }
     
-    private void publishGreeting()
-    {
-        greetingSender.greet("The date is " + new Date());
-    }
-    
-    private void subscribe()
-    {
-        System.out.println("Subscribing to \"commonChannel\". This thread will be blocked.");
-        subscriberJedis.subscribe(redisPubSubBean, RedisSubcriber.CHANNEL_NAME);
-        System.out.println("Subscription ended.");
-        redisPubSubBean.unsubscribe();
-        jedisPool.returnResource(subscriberJedis);
-        System.out.println("subscription resource complete.");
-    }
+
     
 }
