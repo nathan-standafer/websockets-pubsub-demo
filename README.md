@@ -1,5 +1,7 @@
 # websockets-pubsub-demo
-A Spring Boot web application that allows clients to see pub/sub messages that are posted to a redis server.
+I had a hard time finding a good example SpringBoot application that listens to a redis pub/sub queue and pushes messages to browsers via websockets.  So, here it is.
+
+This can be used as a framework to allow multiple web clients to be be updated in real-time when events occur that are published to a redis server.
 
 ## Project Description
 Redis has the capability to allow a service to publish messages as multiple clients subscribe and listen for those messages.  In this project, a message can be published from the redis-cli.  Web clients will display the messages as they are published.  Multiple application servers can each publish the messages to multiple clients in real time.
