@@ -1,29 +1,92 @@
-# websockets-pubsub-demo
-I had a hard time finding a good example SpringBoot application that listens to a redis pub/sub queue and pushes messages to browsers via websockets.  So, here it is.
+# Websockets Pub/Sub Demo
 
-This can be used as a framework to allow multiple web clients to be be updated in real-time when events occur that are published to a redis server.
+This project is a demonstration of a Spring Boot application that listens to a Redis Pub/Sub channel and pushes messages to web clients via WebSockets. This serves as a practical example for developers looking to implement real-time messaging in their applications, allowing multiple web clients to receive updates as events are published to a Redis server.
 
 ## Project Description
-Redis has the capability to allow a service to publish messages as multiple clients subscribe and listen for those messages.  In this project, a message can be published from the redis-cli.  Web clients will display the messages as they are published.  Multiple application servers can each publish the messages to multiple clients in real time.
 
-## Running the Application
-Requirements:
-- Java 11+ must be installed on the machine.
-- A redis server must be running on localhost on the default port (6379)
+Redis Pub/Sub is a messaging paradigm where publishers send messages to channels, and subscribers receive them. This project leverages this feature to broadcast messages from a Redis channel to multiple web clients in real-time. A message published from the `redis-cli` to a specific channel will be displayed on all connected web clients. This architecture allows for scalable real-time communication, as multiple application instances can publish messages to numerous clients.
 
-Start the Spring Boot web application with the following command:
+## Architecture Overview
+
+The application is built with the following key components:
+
+- **Spring Boot:** Provides the core framework for the application, simplifying the setup and development process.
+- **Spring WebSocket:** Enables real-time, two-way communication between the server and clients using the WebSocket protocol.
+- **STOMP (Simple Text Oriented Messaging Protocol):** Used over WebSocket to provide a higher-level messaging protocol.
+- **Redis:** Acts as the message broker, handling the publishing and subscribing of messages through its Pub/Sub feature.
+- **Jedis:** A Java client for Redis.
+- **SockJS & stomp.js:** Frontend libraries to enable WebSocket communication in the browser.
+- **Maven:** For project build and dependency management.
+
+## How It Works
+
+1.  A web client connects to the Spring Boot application's WebSocket endpoint.
+2.  The Spring Boot application subscribes to a Redis channel (`greeging_channel`).
+3.  A message is published to the Redis channel (e.g., using `redis-cli`).
+4.  The Spring Boot application receives the message from the Redis channel.
+5.  The application then broadcasts the message to all connected WebSocket clients.
+6.  The web clients receive the message and display it in the browser.
+
+## Prerequisites
+
+Before you can run the application, you need to have the following installed:
+
+-   **Java 11+:** The application is built with Java 11.
+-   **Redis:** A Redis server must be running on `localhost:6379`.
+
+## Getting Started
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/nathan-standafer/websockets-pubsub-demo.git
+cd websockets-pubsub-demo
 ```
-linux:    ./mvnw spring-boot:run
-windows:  mvnw spring-boot:run
+
+### 2. Run the Application
+
+You can run the Spring Boot application using the Maven wrapper:
+
+**On Linux/macOS:**
+
+```bash
+./mvnw spring-boot:run
 ```
 
-Open a web browser and navigate to: http://localhost:8080.  Click the "Connect" button.
+**On Windows:**
 
-Open the redis-cli from a terminal window with the "redis-cli" command.  Publish some messages to the "greeging_channel" channel.
-![alt text](https://github.com/nathan-standafer/websockets-pubsub-demo/blob/main/images/redis-cli.png?raw=true)
+```bash
+mvnw.cmd spring-boot:run
+```
 
-View the messages on the browser.
-![alt text](https://github.com/nathan-standafer/websockets-pubsub-demo/blob/main/images/web-client.png?raw=true)
+The application will start on `http://localhost:8080`.
 
+### 3. Connect the Web Client
 
+Open your web browser and navigate to `http://localhost:8080`. Click the **"Connect"** button to establish a WebSocket connection.
 
+### 4. Publish Messages from Redis
+
+Open a terminal and use the `redis-cli` to publish messages to the `greeging_channel` channel:
+
+```bash
+redis-cli
+```
+
+Once in the Redis CLI, publish a message:
+
+```bash
+PUBLISH greeging_channel "Hello, from Redis!"
+```
+
+![Redis CLI](images/redis-cli.png)
+
+### 5. View the Messages
+
+You should see the message appear in your web browser in real-time.
+
+![Web Client](images/web-client.png)
+
+## Contributing
+
+Contributions are welcome! If you find any issues or have suggestions for improvements, please open an issue or submit a pull request.
