@@ -6,16 +6,24 @@ import org.springframework.stereotype.Component;
 import com.nas.websockets.WebSocketConfig;
 import com.nas.websockets.entity.Greeting;
 
+/**
+ * Greeting message sender.
+ */
 @Component
 public class GreetingMessagingSender {
-    
+
     private final SimpMessagingTemplate simpMessagingTemplate;
 
     public GreetingMessagingSender(SimpMessagingTemplate SimpMessagingTemplate) {
         this.simpMessagingTemplate = SimpMessagingTemplate;
     }
-    
+
+    /**
+     * Sends a greeting.
+     * @param greeting to send
+     */
     public void greet(String greeting) {
         this.simpMessagingTemplate.convertAndSend(WebSocketConfig.WS_MESSAGE_DESTINATION_GREETING, new Greeting("Hello, this is your message: " + greeting));
     }
 }
+

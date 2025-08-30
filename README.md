@@ -21,7 +21,7 @@ The application is built with the following key components:
 ## How It Works
 
 1.  A web client connects to the Spring Boot application's WebSocket endpoint.
-2.  The Spring Boot application subscribes to a Redis channel (`greeging_channel`).
+2.  The Spring Boot application subscribes to a Redis channel (`greeting_channel`).
 3.  A message is published to the Redis channel (e.g., using `redis-cli`).
 4.  The Spring Boot application receives the message from the Redis channel.
 5.  The application then broadcasts the message to all connected WebSocket clients.
@@ -33,6 +33,22 @@ Before you can run the application, you need to have the following installed:
 
 -   **Java 11+:** The application is built with Java 11.
 -   **Redis:** A Redis server must be running on `localhost:6379`.
+
+### Starting Redis Server
+
+If you have Redis installed locally, you can start the server by running:
+
+```bash
+redis-server
+```
+
+If you prefer using Docker, you can start a Redis container with the following command:
+
+```bash
+docker run -d --name my-redis -p 6379:6379 redis
+```
+
+This command will download the latest Redis image and run it in the background.
 
 ## Getting Started
 
@@ -67,16 +83,23 @@ Open your web browser and navigate to `http://localhost:8080`. Click the **"Conn
 
 ### 4. Publish Messages from Redis
 
-Open a terminal and use the `redis-cli` to publish messages to the `greeging_channel` channel:
+Open a terminal and use the `redis-cli` to publish messages to the `greeting_channel` channel:
 
 ```bash
+redis-cli
+```
+
+If you chose to use a docker to run the Redis container, you can open a bash shell in the docke rcontainer to run the Redis cli command
+
+```bash
+docker exec -it my-redis /bin/bash
 redis-cli
 ```
 
 Once in the Redis CLI, publish a message:
 
 ```bash
-PUBLISH greeging_channel "Hello, from Redis!"
+PUBLISH greeting_channel "Hello, from Redis!"
 ```
 
 ![Redis CLI](images/redis-cli.png)

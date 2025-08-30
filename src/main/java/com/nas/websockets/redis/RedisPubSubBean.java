@@ -5,18 +5,20 @@ import org.springframework.stereotype.Component;
 
 import com.nas.websockets.WebSocketConfig;
 import com.nas.websockets.entity.Greeting;
-
 import redis.clients.jedis.JedisPubSub;
 
-@Component  
+/**
+ * Redis pub sub bean.
+ */
+@Component
 public class RedisPubSubBean extends JedisPubSub {
 
     private final SimpMessagingTemplate simpMessagingTemplate;
-    
+
     public RedisPubSubBean(SimpMessagingTemplate SimpMessagingTemplate) {
         this.simpMessagingTemplate = SimpMessagingTemplate;
     }
-    
+
     @Override
     public void onMessage(String channel, String message) {
         System.out.println("onMessage received. Channel: " + channel + ", message: " + message);

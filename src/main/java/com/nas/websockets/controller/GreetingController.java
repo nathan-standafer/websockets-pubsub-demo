@@ -10,11 +10,16 @@ import com.nas.websockets.entity.Greeting;
 import com.nas.websockets.entity.HelloMessage;
 
 /**
- * allows web clients to send messages to be posted to a web sockets channel for other clients to receive.
+ * Allows web clients to send messages to be posted to a web sockets channel for other clients to receive.
  */
 @Controller
 public class GreetingController {
 
+    /**
+     * Handles messages from the client.
+     * @param message from client
+     * @return greeting
+     */
     @MessageMapping("/hello")
     @SendTo(WebSocketConfig.WS_MESSAGE_DESTINATION_GREETING)
     public Greeting greeting(HelloMessage message) {
